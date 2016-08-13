@@ -1,0 +1,47 @@
+%nav.navbar.navbar-inverse.navbar-fixed-top
+  .container
+    .navbar-header
+      %button.navbar-toggle.collapsed{"aria-controls" => "navbar", "aria-expanded" => "false", "data-target" => "#navbar", "data-toggle" => "collapse", :type => "button"}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand{:href => "#"} Snails
+    #navbar.navbar-collapse.collapse
+      %ul.nav.navbar-nav
+        %li
+          = link_to "Home", users_show_url
+        %li
+          = link_to "Orders", orders_url
+        %li
+          = link_to "Snacks", new_order_url
+        %li.active
+          = link_to "Account", deposits_url
+        %li
+          = link_to "Log out", destroy_user_session_url, :method => :delete
+
+.jumbotron
+  .container
+    %H1 Account
+    %p
+      Add moneys to your account here
+
+.container
+  = link_to 'New Deposit', new_deposit_path
+  %table.table
+    %thead
+      %tr
+        %th Amount
+        %th
+        %th
+        %th
+
+    %tbody
+      - @deposits.each do |deposit|
+        %tr
+          %td= deposit.get_formatted_amount
+          %td= link_to 'Show', deposit
+          %td= link_to 'Edit', edit_deposit_path(deposit)
+          %td= link_to 'Destroy', deposit, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+  %strong Total: #{@total_deposits}
