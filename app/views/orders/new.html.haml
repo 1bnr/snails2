@@ -21,6 +21,8 @@
           = link_to "Log out", destroy_user_session_url, :method => :delete
       %ul.nav.navbar-right
         %li
+          %input.btn.btn-primary.btn-sm#purchase{:type => "purchase", :value => "Submit"}
+          %button.btn.btn-success-outline.btn-sm#reset{:type => "button"} Reset
           %p.navbar-text#order_total{"data-order" => "{\"order_ids\":[]}"} $0.00
 
 .jumbotron
@@ -29,15 +31,13 @@
       .col-lg-12
         %h1.page-header
           Snacks
-          %button.btn.btn-success-outline#reset{:type => "button"} Reset
-          %input.btn.btn-primary#purchase{:type => "purchase", :value => "Submit"}/
       #items
         - @snacks.each do |snack|
           .col-lg-3.col-md-4.col-xs-6.thumb
             %a.thumbnail
-              %img.img-responsive{:alt => "", :src => "/images/400x300.png", :id => "#{snack.id}", "data-price" => "#{snack.price}"}
+              %img.img-responsive{:alt => "", :src => "#{snack.image}", :id => "#{snack.id}", "data-price" => "#{snack.price}"}
                 #{snack.get_formatted_price}   #{snack.name}
-    %input.btn.btn-primary#purchase{:type => "purchase", :value => "Submit"}/
+   
 
 :coffee
   strip_dollar = (m) =>

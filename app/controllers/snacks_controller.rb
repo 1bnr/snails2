@@ -70,6 +70,6 @@ class SnacksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def snack_params
-      params.require(:snack).permit(:name, :price)
+      params.require(:snack).permit(:name, :price, :image)
     end
 end
