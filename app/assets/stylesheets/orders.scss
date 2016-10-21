@@ -1,3 +1,79 @@
 // Place all the styles related to the orders controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// display a cart image in the cart button
+#order_total {
+  background: url(../images/cart.png) no-repeat;
+  padding-left: 35px;
+  background-color: white;
+}
+
+.thumb {
+  background-color:white;
+  background-repeat: no-repeat;
+  background-size: 95% 95%;
+  padding:0px;}
+
+.item-box {
+  display:block;
+  position:relative;
+  margin:0px;}
+
+.item-add .item-remove {
+ display:table-cell;
+ width:auto;
+ }
+
+.item-remove {
+  position: relative;}
+
+.item-price {
+  background-color: white;
+  font-size: larger;
+}
+
+
+.quantity-text {
+  position:relative;
+  float: left;
+  line-height: 0px;
+  margin-right: 8px;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+.add-remove-control {
+  display: inline-block;
+  padding:0px;
+  margin:0px;
+}
+div.cart {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+ul.qty {
+  list-style: none;
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  left: 10%;
+  text-align: right;
+}
+ul.item {
+  list-style: none;
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  left: 20%;
+}
+ul.price {
+  list-style: none;
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  left: 50%;
+  text-align: left;
+}
+

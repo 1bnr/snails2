@@ -19,11 +19,7 @@
           = link_to "Account", deposits_url
         %li
           = link_to "Log out", destroy_user_session_url, :method => :delete
-      %ul.nav.navbar-right
-        %li
-          %input.btn.btn-primary.btn-sm#purchase{:type => "purchase", :value => "Submit"}
-          %button.btn.btn-success-outline.btn-sm#reset{:type => "button"} Reset
-          %p.navbar-text#order_total{"data-order" => "{\"order_ids\":[]}"} $0.00
+
 
 .jumbotron
   .container
@@ -34,36 +30,118 @@
       #items
         - @snacks.each do |snack|
           .col-lg-3.col-md-4.col-xs-6.thumb
-            %a.thumbnail
-              %img.img-responsive{:alt => "", :src => "#{snack.image}", :id => "#{snack.id}", "data-price" => "#{snack.price}"}
-                #{snack.get_formatted_price}   #{snack.name}
-   
+            %input{:type=>"hidden", :value=>'0', :name=>"#{snack.id}", :id=>"quantity_#{snack.id}"}
+            .add-remove-control{:style => "background-image: url( #{snack.image}); background-repeat: no-repeat; background-size: 95% 95%;"}        
+              #item-add{ :class => "item-add"} 
+                %img.img-responsive{:alt => "", :src => "../images/add-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}", "data-name" => "#{snack.name}"}
+              %span{:id => "quantity-text_#{snack.id}", :class => "quantity-text"}
+                0
+              #item-remove{:class => "item-remove"}
+                %img.img-responsive{:alt => "", :src => "../images/remove-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}"}
+            .item-price
+              #{snack.get_formatted_price}   #{snack.name} 
+               
 
+
+%nav.navbar-inverse.navbar-fixed-bottom
+  %span.navbar
+    %input.btn.btn-primary.btn-sm#purchase{:type => "purchase", :value => "Purchase", :title => "purchase selected items"}
+    %button.btn.btn-info.btn-sm#reset{:type => "button", :title => "empty shopping cart"} Reset
+    %button.btn.btn-sm#order-total{"data-order" => "{\"cart_items\":{ \"id\":[],\"qntty\":[]}}", :title => "view shopping cart contents"} $0.00
+    %div{:id => "cart", :class => "cart"} 
+      %ul{:id => "qty", :class => "qty"} 
+        %li qty 
+      %ul{:id => "item", :class => "item"} 
+        %li item
+      %ul{:id => "price", :class => "price"} 
+        %li price
 :coffee
   strip_dollar = (m) =>
     money = m.split('$')
     return money[1]
 
-  get_orders = () ->
-    JSON.parse($('#order_total').attr('data-order'));
+  get_orders = () =>
+    JSON.parse($('body .jumbotron .container #order-total').attr('data-order'));
+  
+  get_items = () =>
+    snacks = $('form#snacks').serializeArray().filter((x) => 
+      parseInt(x['value']) > 0)
 
-  append_id = (id) =>
-    orders = JSON.parse($('#order_total').attr('data-order'));
-    id_array = orders.order_ids.concat(id)
-    orders.order_ids = id_array
-    $('#order_total').attr('data-order',JSON.stringify(orders));
+  add_item = (id, name, price) =>
+    quantity_txt = $('body .jumbotron .container #quantity-text_'+id)
+    cart = $('body nav .navbar .cart');
+    orders = JSON.parse($('#order-total').attr('data-order'));
+    id_array = orders.cart_items['id']
+    index = id_array.indexOf(id+"")
+    if ( index > -1)
+      qntty = orders.cart_items['qntty'][index]
+      orders.cart_items['qntty'][index] = (qntty + 1)
+      quantity_txt.text(qntty + 1)
+      cart.find('#qty #' + id).text(qntty + 1)
+      cart.find('#price #' + id).text('$'+ (price * (qntty + 1)).toFixed(2))
+    else
+      cart_item = ['<li id ="', id, '">', name, '<\/li>'].join('')
+      cart_qty =  ['<li id ="', id, '">1<\/li>'].join('')
+      cart_price = ['<li id ="', id, '">$', price.toFixed(2), '<\/li>'].join('')
+      console.log(price)
+      cart.find('#item').append(cart_item)
+      cart.find('#qty').append(cart_qty)
+      cart.find('#price').append(cart_price)
+      id_array = orders.cart_items['id'].concat(id)
+      orders.cart_items['id'] = id_array
+      ct_array = orders.cart_items['qntty']
+      orders.cart_items['qntty'] = ct_array.concat(1)
+      quantity_txt.text(1)
+    $('#order-total').attr('data-order',JSON.stringify(orders));
+
+  remove_item = (id, price) =>
+    quantity_txt = $('body .jumbotron .container #quantity-text_'+id)
+    cart = $('body nav .navbar .cart');
+    orders = JSON.parse($('#order-total').attr('data-order'))
+    id_array = orders.cart_items['id']
+    index = id_array.indexOf(id+"")
+    if ( index > -1)
+      qntty = (parseInt(orders.cart_items['qntty'][index]) - 1)
+      if (qntty == 0 )
+        orders.cart_items['id'].splice(index,1)
+        orders.cart_items['qntty'].splice(index,1)
+        quantity_txt.text(qntty)
+        cart.find('#qty #' + id).remove()
+        cart.find('#item #' + id).remove()
+        cart.find('#price #' + id).remove()
+      else
+        orders.cart_items['qntty'][index] = (qntty)
+        quantity_txt.text(qntty)
+        cart.find('#qty #' + id).text(qntty)
+        cart.find('#price #' + id).text('$'+ (price * (qntty)).toFixed(2))
+    $('#order-total').attr('data-order',JSON.stringify(orders))
+      
+
 
   update_price_total = (price) =>
-    current_total = strip_dollar($("#order_total").html())
+    current_total = strip_dollar($("#order-total").html())
     current_float = parseFloat(current_total)
     new_total = price + current_float
-    $("#order_total").html( "$" + new_total.toFixed(2) )
+    $("#order-total").html( "$" + new_total.toFixed(2) )
 
-  $('#items').delegate 'img', 'click', ->
-    append_id event.target.id
+
+  $('body .jumbotron .container #items').delegate 'img', 'click', ->
+    choice = $(this).parent().attr("id")
+    id = $(this).attr("id")
     price = $(event.target).data('price')
-    update_price_total price
+    name = $(event.target).data('name')
+    orders = JSON.parse($('#order-total').attr('data-order'));
+    id_array = orders.cart_items['id']
+    index = id_array.indexOf(id+"")
+    if (choice == 'item-add')
+      update_price_total price
+      add_item(event.target.id, name, price)
+    else 
+      if (index > -1)
+        update_price_total (0 - price)
+        remove_item(event.target.id, price)
     return
+
 
   $('#reset').click ->
     window.location.href = "/";
@@ -78,3 +156,16 @@
       success: (data) ->
         window.location.href = "/orders";
         return
+
+  $('#order-total').click ->
+    $.ajax 
+      type: 'post'
+      url: '/orders/view_cart',
+      data: JSON.stringify(get_orders())
+      contentType: 'application/json; charset=utf-8'
+      traditional: true
+      success: (data) ->
+        console.log(data)
+        window.location.href = "/orders/view_cart";
+        return
+

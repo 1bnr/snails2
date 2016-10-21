@@ -1,8 +1,9 @@
 class OrdersController < ApplicationController
   include OrderHelper
+
   before_action :set_order, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
-
+  
   # GET /orders
   # GET /orders.json
   def index
@@ -31,6 +32,16 @@ class OrdersController < ApplicationController
     item.purchase_price = item.snack.price
     item.order_id = order.id
     item.save
+  end
+
+  def view_cart
+    params.inspect
+ #   if params["snacks"]
+ #     cart = JSON.parse(params["snacks"])
+ #     cart.inspect
+ #   else
+ #     # rais exception
+ #   end
   end
 
   def process_transaction(purchases)
@@ -92,7 +103,10 @@ class OrdersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
-      @order = Order.find(params[:id])
+      params.inspect
+      sleep 5
+      @order = Order.find(params[:cart_items][:id])
+      sleep 5
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
