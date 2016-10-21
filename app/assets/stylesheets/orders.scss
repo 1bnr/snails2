@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 // display a cart image in the cart button
-#order_total {
+button.btn.btn-sm#order-total {
   background: url(../images/cart.png) no-repeat;
   padding-left: 35px;
   background-color: white;
@@ -48,32 +48,52 @@
   padding:0px;
   margin:0px;
 }
-div.cart {
+
+.cart-container {
+  height: 0px;
+}
+
+span.cart {
+  background-color: #222;
+  color: white;
+  width: 100%;
+  transform: scale(1.3);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+div.cart-title {
   display: flex;
-  position: relative;
+  left: 20%;
   width: 100%;
 }
-ul.qty {
+div.cart-contents { 
+  display: flex;
+}
+.cart-elements{
+  display: block;
   list-style: none;
-  color: white;
-  font-weight: bold;
   font-size: large;
+  line-height: 30px;
+  padding: 10px;
+}
+
+ul.qty {
   left: 10%;
   text-align: right;
 }
 ul.item {
-  list-style: none;
-  color: white;
-  font-weight: bold;
-  font-size: large;
   left: 20%;
 }
 ul.price {
-  list-style: none;
-  color: white;
-  font-weight: bold;
-  font-size: large;
   left: 50%;
   text-align: left;
 }
 
+ul.add{
+  text-align: right;
+}
+
+ul.remove{
+  text-align: left;
+}
