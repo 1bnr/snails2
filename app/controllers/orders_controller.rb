@@ -26,34 +26,39 @@ class OrdersController < ApplicationController
   def edit
   end
 
-  def create_line_item(id, order)
-    item = LineItem.new
-    item.snack_id = id
-    item.purchase_price = item.snack.price
-    item.order_id = order.id
-    item.save
-  end
-
-  def view_cart
-    params.inspect
- #   if params["snacks"]
- #     cart = JSON.parse(params["snacks"])
- #     cart.inspect
- #   else
- #     # rais exception
- #   end
+  def create_line_item(id, order, quantity)
+		snack = Snack.find(id)
+		if (snack)
+      item = LineItem.new
+      item.snack_id = id
+		  item.qntity = quantity
+      item.purchase_price = Snack.find(id).price * quantity
+      item.order_id = order.id
+      item.save
+    end
   end
 
   def process_transaction(purchases)
-    order = Order.create(user_id: current_user.id)
-    purchases.each do |id|
-      item = create_line_item(id,order)
+		purchases.inspect
+		ids = purchases["id"]
+		qntty = purchases["qntty"]
+    ids.each_index do |i|
+      order = Order.create(user_id: current_user.id)
+		  snack = Snack.find((ids[i].to_i))
+		  quantity = (qntty[i].to_i)
+		  if (snack)
+        item = LineItem.new
+        order.item_id = snack.id
+		    order.qntity = quantity
+        order.price = snack.price * quantity
+        order.save
+      end
     end
   end
 
   def purchase
-    if params["order_ids"]
-      process_transaction(params["order_ids"])
+    if params["cart_items"]
+      process_transaction(params["cart_items"])
       redirect_to action: "index"
     else
       # raise exception
@@ -64,7 +69,6 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
-
     respond_to do |format|
       if @order.save
         format.html { redirect_to @order, notice: 'Order was successfully created.' }
@@ -103,10 +107,7 @@ class OrdersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
-      params.inspect
-      sleep 5
-      @order = Order.find(params[:cart_items][:id])
-      sleep 5
+      @order = Order.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

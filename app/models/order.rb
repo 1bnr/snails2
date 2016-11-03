@@ -6,4 +6,5 @@ class Order < ActiveRecord::Base
   def calculate_order_sum
     sum_order
   end
+	
 end

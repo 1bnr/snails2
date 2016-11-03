@@ -5,6 +5,7 @@ class DepositsController < ApplicationController
   # GET /deposits
   # GET /deposits.json
   def index
+  	puts(current_user.account.inspect)
     @deposits = current_user.account.deposits
     @total_deposits = current_user.account.formatted_total_deposits
   end
