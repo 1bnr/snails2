@@ -11,16 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161028211856) do
+ActiveRecord::Schema.define(version: 20161106211705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.integer  "user_id"
-    t.decimal  "amount",     precision: 8, scale: 2
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "is_admin",   default: false, null: false
   end
 
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
@@ -47,12 +47,9 @@ ActiveRecord::Schema.define(version: 20161028211856) do
   add_index "line_items", ["snack_id"], name: "index_line_items_on_snack_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.decimal  "price",      precision: 8, scale: 2
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer  "user_id"
-    t.integer  "item_id"
-    t.integer  "qntity"
   end
 
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
@@ -63,6 +60,7 @@ ActiveRecord::Schema.define(version: 20161028211856) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.string   "image"
+    t.string   "metadata"
   end
 
   create_table "users", force: :cascade do |t|

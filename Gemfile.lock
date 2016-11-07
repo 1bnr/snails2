@@ -70,6 +70,8 @@ GEM
       warden (~> 1.2.3)
     erubis (2.7.0)
     execjs (2.7.0)
+    foreman (0.82.0)
+      thor (~> 0.19.1)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     haml (4.0.7)
@@ -204,6 +206,7 @@ DEPENDENCIES
   carrierwave (~> 0.10.0)
   coffee-rails (~> 4.1.0)
   devise
+  foreman
   haml-rails
   jbuilder (~> 2.0)
   jquery-rails

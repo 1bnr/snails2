@@ -7,7 +7,11 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
+<%= if (current_user.nil?)
+  render 'shared/emptybar'
+else
+  render 'shared/navbar'
+end %>
 <%= yield %>
 
 </body>

@@ -15,3 +15,6 @@
 /log/*
 !/log/.keep
 /tmp
+
+# ignor my mail information
+.env

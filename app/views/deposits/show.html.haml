@@ -1,9 +1,11 @@
-%p#notice= notice
+.jumbotron
+  .container
+    %p#notice= notice
 
-%p
-  %b Amount:
-  = @deposit.amount
+    %p
+      %b Amount:
+      = @deposit.amount
 
-= link_to 'Edit', edit_deposit_path(@deposit)
-\|
-= link_to 'Back', deposits_path
+      = link_to 'Edit', edit_deposit_path(@deposit)
+      \|
+      = link_to 'Back', deposits_path

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :snacks
   resources :orders
+  resources :line_items
 
 
   devise_scope :user do
@@ -11,18 +12,12 @@ Rails.application.routes.draw do
   end
 
   root "orders#new"
-
-  #devise_scope :user do
-    #root 'users/sessions#show'
-  #end
-
+#  get 'orders/:id/show_order' => 'orders#show_order'
   post 'orders/purchase' => 'orders#purchase'
   post 'orders/view_cart' => 'orders#view_cart'
 
-#  get 'cart' => 'cart#index', :as => 'cart_index'
-#  post 'cart/add/' => 'cart#add', :as => 'cart_add'
-#  delete 'cart/remove(/:id(/:all))' => 'cart#delete', :as => 'cart_delete'
-#  match 'cart' => 'cart#add', :via => :post
+  post 'line_items/update' => 'line_items#update'
+  post 'deposits/update' => 'deposits#update'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

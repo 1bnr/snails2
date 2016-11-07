@@ -1,9 +1,9 @@
 class OrdersController < ApplicationController
   include OrderHelper
 
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, only: [:show, :edit, :update, :destroy, :show_order]
   before_action :authenticate_user!
-  
+
   # GET /orders
   # GET /orders.json
   def index
@@ -25,6 +25,9 @@ class OrdersController < ApplicationController
   # GET /orders/1/edit
   def edit
   end
+  # GET /orders/:id/show_order
+  def show_order
+  end
 
   def create_line_item(id, order, quantity)
 		snack = Snack.find(id)
@@ -42,24 +45,16 @@ class OrdersController < ApplicationController
 		purchases.inspect
 		ids = purchases["id"]
 		qntty = purchases["qntty"]
+    @order = Order.create(user_id: current_user.id)
     ids.each_index do |i|
-      order = Order.create(user_id: current_user.id)
-		  snack = Snack.find((ids[i].to_i))
-		  quantity = (qntty[i].to_i)
-		  if (snack)
-        item = LineItem.new
-        order.item_id = snack.id
-		    order.qntity = quantity
-        order.price = snack.price * quantity
-        order.save
-      end
+      create_line_item((ids[i].to_i), @order, (qntty[i].to_i))
     end
   end
 
   def purchase
     if params["cart_items"]
       process_transaction(params["cart_items"])
-      redirect_to action: "index"
+      redirect_to action: show_order, id: @order.id
     else
       # raise exception
     end
@@ -80,6 +75,7 @@ class OrdersController < ApplicationController
     end
   end
 
+
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
@@ -97,9 +93,9 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    @order.destroy
-    respond_to do |format|
-      format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
+  	LineItem.find(snack_id: id, order_id: @order.id).destroy
+  	respond_to do |format|
+      format.html { redirect_to orders_url, notice: 'Item was successfully removed.' }
       format.json { head :no_content }
     end
   end

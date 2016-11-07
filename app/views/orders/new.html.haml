@@ -1,4 +1,3 @@
-= render 'shared/navbar'
 .jumbotron
   .container
     .row
@@ -9,17 +8,17 @@
         - @snacks.each do |snack|
           .col-lg-3.col-md-4.col-xs-6.thumb
             %input{:type=>"hidden", :value=>'0', :name=>"#{snack.id}", :id=>"quantity_#{snack.id}"}
-            .add-remove-control{:style => "background-image: url( #{snack.image}); background-repeat: no-repeat; background-size: 95% 95%;"}        
-              #item-add{ :class => "item-add"} 
+            .add-remove-control{:style => "background-image: url( #{snack.image}); background-repeat: no-repeat; background-size: 95% 95%;"}
+              #item-add{ :class => "item-add"}
                 %img.img-responsive{:alt => "", :src => "../images/add-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}", "data-name" => "#{snack.name}"}
               %span{:id => "quantity-text_#{snack.id}", :class => "quantity-text"}
                 0
               #item-remove{:class => "item-remove"}
                 %img.img-responsive{:alt => "", :src => "../images/remove-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}"}
             .item-price
-              #{snack.get_formatted_price}   #{snack.name} 
+              #{snack.get_formatted_price}   #{snack.name}
       %br
-      %br         
+      %br
 
 %nav.navbar-inverse.navbar-fixed-bottom
   %span.navbar
@@ -27,15 +26,15 @@
     %button.btn.btn-info.btn-sm#reset{:type => "button", :title => "empty shopping cart"} Reset
     %button.btn.btn-sm#order-total{"data-order" => "{\"cart_items\":{ \"id\":[],\"qntty\":[]}}", :title => "view shopping cart contents"} $0.00
     %div{:id => "cart-container", :class => "cart-container", :toggle => "down"}
-      %span{:id => "cart", :class => "cart"} 
+      %span{:id => "cart", :class => "cart"}
         %div{:id => "cart-title", :class => "cart-title"}
-          %h2 Cart Contents 
+          %h2 Cart Contents
         %div{:id => "cart-contents", :class => "cart-contents"}
-          %ul{:id => "qty", :class => "qty cart-elements"} 
-            %li qty 
-          %ul{:id => "item", :class => "item cart-elements"} 
+          %ul{:id => "qty", :class => "qty cart-elements"}
+            %li qty
+          %ul{:id => "item", :class => "item cart-elements"}
             %li item
-          %ul{:id => "price", :class => "price cart-elements"} 
+          %ul{:id => "price", :class => "price cart-elements"}
             %li price
           %ul{:id => "add", :class => "add cart-elements"}
             %li add
@@ -44,149 +43,3 @@
 
 
 :coffee
-  strip_dollar = (m) =>
-    money = m.split('$')
-    return money[1]
-
-  get_orders = () =>
-    JSON.parse($('#order-total').attr('data-order'));
- 		 
-  get_items = () =>
-    snacks = $('form#snacks').serializeArray().filter((x) => 
-      parseInt(x['value']) > 0)
-
-  add_item = (id, name, price) =>
-    quantity_txt = $('body .jumbotron .container #quantity-text_'+id)
-    cart = $('body nav .navbar .cart');
-    orders = JSON.parse($('#order-total').attr('data-order'));
-    id_array = orders.cart_items['id']
-    index = id_array.indexOf(id+"")
-    if ( index > -1)
-      qntty = orders.cart_items['qntty'][index]
-      orders.cart_items['qntty'][index] = (qntty + 1)
-      quantity_txt.text(qntty + 1)
-      cart.find('#qty #' + id).text(qntty + 1)
-      cart.find('#price #' + id).text('$'+ (price * (qntty + 1)).toFixed(2))
-    else
-      cart_item = ['<li id ="', id, '">', name, '<\/li>'].join('')
-      cart_qty =  ['<li id ="', id, '">1<\/li>'].join('')
-      cart_price = ['<li id ="', id, '">$', price.toFixed(2), '<\/li>'].join('')
-      cart_add = ['<li id ="', id, '"><span id="add"><img src="../images/add.png" data-price="',price,'" data-name="',name,'" ></span><\/li>'].join('')
-      cart_rem = ['<li id ="', id, '"><span id="rem"><img src="../images/subtract.png" data-price="',price,'" data-name="',name,'"></span><\/li>'].join('')
-      cart.find('#item').append(cart_item)
-      cart.find('#qty').append(cart_qty)
-      cart.find('#price').append(cart_price)
-      cart.find('#add').append(cart_add)
-      cart.find('#remove').append(cart_rem)
-      id_array = orders.cart_items['id'].concat(id)
-      orders.cart_items['id'] = id_array
-      ct_array = orders.cart_items['qntty']
-      orders.cart_items['qntty'] = ct_array.concat(1)
-      quantity_txt.text(1)
-      if($('.cart-container').attr('toggle') == 'up')
-        $('.cart-container').animate({height: '+=35px'}, 800, 'easeInOutExpo');
-
-    $('#order-total').attr('data-order',JSON.stringify(orders));
-
-  remove_item = (id, price) =>
-    quantity_txt = $('body .jumbotron .container #quantity-text_'+id)
-    cart = $('body nav .navbar .cart');
-    orders = JSON.parse($('#order-total').attr('data-order'))
-    id_array = orders.cart_items['id']
-    index = id_array.indexOf(id+"")
-    if ( index > -1)
-      qntty = (parseInt(orders.cart_items['qntty'][index]) - 1)
-      if (qntty == 0 )
-        orders.cart_items['id'].splice(index,1)
-        orders.cart_items['qntty'].splice(index,1)
-        quantity_txt.text(qntty)
-        cart.find('#qty #' + id).remove()
-        cart.find('#item #' + id).remove()
-        cart.find('#price #' + id).remove()
-        cart.find('#add #' + id).remove()
-        cart.find('#remove #' + id).remove()
-        if($('.cart-container').attr('toggle') == 'up')
-          $('.cart-container').animate({height: '-=35px'}, 800, 'easeInOutExpo');
-      else
-        orders.cart_items['qntty'][index] = (qntty)
-        quantity_txt.text(qntty)
-        cart.find('#qty #' + id).text(qntty)
-        cart.find('#price #' + id).text('$'+ (price * (qntty)).toFixed(2))
-    $('#order-total').attr('data-order',JSON.stringify(orders))
-      
-
-
-  update_price_total = (price) =>
-    current_total = strip_dollar($("#order-total").html())
-    current_float = parseFloat(current_total)
-    new_total = price + current_float
-    $("#order-total").html( "$" + new_total.toFixed(2) )
-
-
-  $('body .jumbotron .container #items').delegate 'img', 'click', ->
-    choice = $(this).parent().attr("id")
-    id = $(this).attr("id")
-    price = $(event.target).data('price')
-    name = $(event.target).data('name')
-    orders = JSON.parse($('#order-total').attr('data-order'));
-    id_array = orders.cart_items['id']
-    index = id_array.indexOf(id+"")
-    if (choice == 'item-add')
-      update_price_total price
-      add_item(id, name, price)
-    else 
-      if (index > -1)
-        update_price_total (0 - price)
-        remove_item(id, price)
-    return
-
-
-  $('#cart-contents').delegate 'img', 'click', ->
-    choice = $(this).parent().attr("id")
-    id = $(this).parent().parent().attr("id")
-    console.log('id:'+id)
-    price = $(event.target).data('price')
-    console.log('price:'+price)
-    name = $(event.target).data('name')
-    console.log('name:'+name)
-    orders = JSON.parse($('#order-total').attr('data-order'));
-    id_array = orders.cart_items['id']
-    index = id_array.indexOf(id+"")
-    if (choice == 'add')
-      update_price_total price
-      add_item(id, name, price)
-    else 
-      if (index > -1)
-        update_price_total (0 - price)
-        remove_item(id, price)
-    return
-
-
-
-
-
-  $('#reset').click ->
-    window.location.href = "/";
-
-  $('#purchase').click ->
-    $.ajax 
-      type: 'post'
-      url: '/orders/purchase',
-      data: JSON.stringify(get_orders())
-      contentType: 'application/json; charset=utf-8'
-      traditional: true
-      success: (data) ->
-        window.location.href = "/orders";
-        return
-
-  $('#order-total').click ->
-    cart = $('body nav .navbar .cart');
-    cart_h = 35 * (cart.find('#qty > li').length )
-    if($('.cart-container').attr('toggle') == 'down')
-      $('.cart-container').animate({height: '+=' + (60 + cart_h) + 'px'}, 800, 'easeInOutExpo');
-      $('.cart-container').attr('toggle', 'up')
-    else
-      cart_h = $('.cart-container').height()
-      $('.cart-container').animate({height: '-=' + (cart_h) + 'px'}, 800, 'easeInOutExpo');
-      $('.cart-container').attr('toggle', 'down')
-

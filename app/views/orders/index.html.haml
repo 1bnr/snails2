@@ -1,9 +1,10 @@
-= render 'shared/navbar'
 .jumbotron
   .container
-    %h1 Orders
+    - title = (params['id'].nil?) ? "Orders" : "Order #{params['id']}"
+    %h1 #{title}
     %p
-      View and update orders
+      View and update
+    %p#notice= notice
 
 .container
   %table.table
@@ -15,14 +16,22 @@
         %th Price
         %th Purchase Date
     %tbody
-    - @orders.each do |order|
-      %tr
-        %th{:scope => "row"}= order.id
-        %td= Snack.find(order.item_id).name
-        %td= order.qntity
-        %td= order.price
-        %td= order.created_at.to_formatted_s(:short)
-        %td= link_to 'Show', order
-        %td= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' }
-
-  %strong Total: #{@grand_total}
+    - orders = (params['id'].nil?) ? @orders : [Order.find(params['id'])]
+    - subtotal = 0
+    - orders.each do |order|
+      - order.line_items.each do |item|
+        %tr{:id => "item_#{item.id}","order"=> "#{order.id}", "data" => "{\"line_item\":{\"id\":#{item.id}, \"qntity\":#{item.qntity}, \"purchase_price\" : #{item.purchase_price}}}", :changed => "false"}
+          %th{:scope => "row"}= order.id
+          %td= Snack.find(item.snack_id).name
+          %td.quantity{:data => item.qntity}= item.qntity
+          %td.price{:data => item.purchase_price}= number_to_currency(item.purchase_price)
+          %td= item.created_at.to_formatted_s(:short)
+          %td{:class => "edit", :id => "#{item.id}"}
+            %a#edit Edit
+          %td= link_to 'Destroy', LineItem.find(item.id), method: :delete, data: { confirm: 'Are you sure?' }
+          - subtotal += (params['id'].nil?) ? 0 : item.purchase_price
+  - if (!subtotal.zero?)
+    %strong Subtotal: #{number_to_currency(subtotal)}
+    %br
+  %strong Orders Total: #{@grand_total}
+= javascript_include_tag 'orders'

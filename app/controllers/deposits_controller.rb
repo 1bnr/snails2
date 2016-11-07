@@ -1,6 +1,13 @@
 class DepositsController < ApplicationController
   before_action :set_deposit, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_filter :check_for_cancel, :only => [:create, :update]
+
+    def check_for_cancel
+      if params[:cancel]
+        redirect_to deposits_url
+      end
+    end
 
   # GET /deposits
   # GET /deposits.json
@@ -32,8 +39,8 @@ class DepositsController < ApplicationController
 
     respond_to do |format|
       if @deposit.save
-        format.html { redirect_to @deposit, notice: 'Deposit was successfully created.' }
-        format.json { render :show, status: :created, location: @deposit }
+        format.html { redirect_to deposits_path, notice: 'Deposit was successfully created.' }
+        format.json { render :show, status: :created, location: deposits_path }
       else
         format.html { render :new }
         format.json { render json: @deposit.errors, status: :unprocessable_entity }
@@ -44,10 +51,11 @@ class DepositsController < ApplicationController
   # PATCH/PUT /deposits/1
   # PATCH/PUT /deposits/1.json
   def update
+    params.inspect
     respond_to do |format|
       if @deposit.update(deposit_params)
-        format.html { redirect_to @deposit, notice: 'Deposit was successfully updated.' }
-        format.json { render :show, status: :ok, location: @deposit }
+        format.html { redirect_to deposits_path, notice: 'Deposit was successfully updated.' }
+        format.json { render :show, status: :ok, location: deposits_path }
       else
         format.html { render :edit }
         format.json { render json: @deposit.errors, status: :unprocessable_entity }

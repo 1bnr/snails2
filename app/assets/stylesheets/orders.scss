@@ -2,6 +2,11 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.edit, .price{
+  width: 14ch;
+}
+.quantity {width: 9ch;}
+
 // display a cart image in the cart button
 button.btn.btn-sm#order-total {
   background: url(../images/cart.png) no-repeat;
@@ -67,7 +72,7 @@ div.cart-title {
   left: 20%;
   width: 100%;
 }
-div.cart-contents { 
+div.cart-contents {
   display: flex;
 }
 .cart-elements{

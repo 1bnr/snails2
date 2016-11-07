@@ -1,11 +1,29 @@
 class SnacksController < ApplicationController
   before_action :set_snack, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_filter :restrict_users_by_account_type
+  before_filter :check_for_cancel, :only => [:create, :update]
+
+  def check_for_cancel
+    if params[:cancel] 
+      redirect_to snacks_url
+    end
+  end
+
+  def restrict_users_by_account_type
+    @account = current_user.account
+    if (!@account.is_admin)
+      respond_to do |format|
+        format.html { redirect_to "/", notice: 'Unauthorized access attempt has been logged.' }
+        format.json { render :show, status: :created, location: "/" }
+      end
+    end
+  end
 
   # GET /snacks
   # GET /snacks.json
   def index
-    @snacks = Snack.all
+      @snacks = Snack.all
   end
 
   # GET /snacks/1
@@ -26,7 +44,6 @@ class SnacksController < ApplicationController
   # POST /snacks.json
   def create
     @snack = Snack.new(snack_params)
-
     respond_to do |format|
       if @snack.save
         format.html { redirect_to @snack, notice: 'Snack was successfully created.' }
@@ -70,6 +87,6 @@ class SnacksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def snack_params
-      params.require(:snack).permit(:name, :price, :image)
+      params.require(:snack).permit(:name, :price, :image, :metadata)
     end
 end

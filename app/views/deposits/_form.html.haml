@@ -5,9 +5,15 @@
       %ul
         - @deposit.errors.full_messages.each do |msg|
           %li= msg
+  - select_options = []
+  - (1..100).each do | d |
+
+    - select_options.push([ "#{number_to_currency(d)}", "#{number_with_precision(d, precision: 1)}" ])
 
   .field
     = f.label :amount
-    = f.text_field :amount
+    = f.select :amount, options_for_select(select_options, @deposit.amount)
+
   .actions
     = f.submit 'Save'
+    = button_tag "Cancel", :type => 'submit' , :name => 'cancel', :value => true
