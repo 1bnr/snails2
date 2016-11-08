@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-$("table > tbody > tr > td.edit").on 'click','a#edit', ->
+$("table > tbody > tr > td.edit").on 'click','a#edit', (event) ->
   if ($("table > tbody > tr > td").find('#cancel').length > 0)
     toggle_cancel( $("table > tbody > tr > td").find('#cancel') )
   toggle_edit($(this))
@@ -24,7 +24,7 @@ toggle_edit = (el) ->
   $(this).parent().removeClass('edit')
 
 
-$("table > tbody > tr > td").on 'click', 'a#save', ->
+$("table > tbody > tr > td").on 'click', 'a#save', (event) ->
   changed = $(this).parent().parent().attr("changed")
   if (changed == "true")
     data = JSON.parse($(this).parent().parent().attr("data")).line_item
@@ -42,7 +42,7 @@ $("table > tbody > tr > td").on 'click', 'a#save', ->
       success: (textStatus) ->
         return
 
-$("table > tbody > tr > td").on 'click', 'a#cancel', ->
+$("table > tbody > tr > td").on 'click', 'a#cancel', (event) ->
   toggle_cancel($(this))
 
 toggle_cancel = (el) ->
@@ -61,7 +61,7 @@ toggle_cancel = (el) ->
   el.parent().addClass('edit')
   el.parent().removeClass('save')
 
-$("table > tbody > tr > td").on 'click', "select", ->
+$("table > tbody > tr > td").on 'click', "select", (event) ->
   data = JSON.parse($(this).parent().parent().attr("data"))
   field = $(this).attr('name')
   value = $(this).val()
@@ -171,8 +171,7 @@ update_price_total = (price) =>
   $("#order-total").html( "$" + new_total.toFixed(2) )
 
 
-$('body .jumbotron .container #items').on 'click', 'img', ->
-  console.log("clicked")
+$('body .jumbotron .container #items .add-remove-control').on 'click',  'img', (event) ->
   choice = $(this).parent().attr("id")
   id = $(this).attr("id")
   price = $(event.target).data('price')
@@ -190,14 +189,11 @@ $('body .jumbotron .container #items').on 'click', 'img', ->
   return
 
 
-$('#cart-contents').on 'click', 'img', ->
+$('#cart-contents').on 'click', 'img', (event) ->
   choice = $(this).parent().attr("id")
-  id = $(this).parent().parent().attr("id")
-  console.log('id:'+id)
-  price = $(event.target).data('price')
-  console.log('price:'+price)
-  name = $(event.target).data('name')
-  console.log('name:'+name)
+  id = $(this).target.parent().parent().attr("id")
+  price = $(this).target.data('price')
+  name = $(this).target.data('name')
   orders = JSON.parse($('#order-total').attr('data-order'));
   id_array = orders.cart_items['id']
   index = id_array.indexOf(id+"")
