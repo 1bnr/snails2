@@ -42,7 +42,7 @@
     id = el.parent().parent().attr("id")
     $("tbody>#"+id+" .amount").attr("data", data.amount)
     $("tbody>#"+id+" .amount").children(':input').remove()
-    $("tbody>#"+id+" .amount").text( "$"+amount.toFixed(2) )
+    $("tbody>#"+id+" .amount").text( "$"+data.amount.toFixed(2) )
     $("tbody>#"+id+" .edit").children().remove()
     $("tbody>#"+id+" .edit").text("")
     $("tbody>#"+id+" .edit").append("<a id='edit'>Edit</a>")
