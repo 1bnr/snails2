@@ -23,7 +23,7 @@ remove_item = (id, price) =>
   index = id_array.indexOf(id+"")
   if ( index > -1)
     qntty = (parseInt(orders.cart_items['qntty'][index]) - 1)
-    qntty_input = $('body .jumbotron .container .row #items #item_'+id+' input')
+    qntty_input = $('body .jumbotron .container .row #items #item_'+id+' .item-text input')
     qntty_input.val(qntty+"")
     qntty_input.trigger('change')
 
@@ -36,7 +36,7 @@ add_item = (id, name, price) =>
   qntty = 1
   if ( index > -1)
     qntty = (parseInt(orders.cart_items['qntty'][index]) + 1)
-  qntty_input = $('body .jumbotron .container .row #items #item_'+id+' input')
+  qntty_input = $('body .jumbotron .container .row #items #item_'+id+' .item-text input')
   qntty_input.val(qntty+"")
   qntty_input.trigger('change')
 
@@ -82,7 +82,7 @@ add_item_to_cart = (id, name, price, qtty) =>
     $('.cart-container').animate({height: '+=35px'}, 800, 'easeInOutExpo');
 
 # item input onChange eventListener
-$('body .jumbotron .container .row #items .item').on 'change', 'input', (event) ->
+$('body .jumbotron .container .row #items .item .item-text').on 'change', 'input', (event) ->
   qntty = parseInt($(this).val())
   id = $(this).attr("id").slice(9, $(this).attr("id").length)
   price = $(event.target).data('price')
@@ -113,7 +113,7 @@ set_item_quantity_in_cart = (id, name, price, qntty) =>
         $('.cart-container').animate({height: '-=35px'}, 800, 'easeInOutExpo');
     else
       orders.cart_items['qntty'][index] = (qntty)
-      quantity_txt.text(qntty + 1)
+      quantity_txt.text(qntty)
       cart.find('#qty #' + id).text(qntty)
       cart.find('#price #' + id).text('$'+ (price * (qntty)).toFixed(2))
   else
@@ -197,33 +197,21 @@ $('#cart-contents').on 'click', 'img', (event) ->
   return
 
 # toggle ui between text and image
-$('span.navbar > #ui_toggle').click ->
+$('#ui_toggle').click ->
   elements = $('span.item')
   for e in elements
     elms = $(e).children()
     for c in elms
       element = $(c)
+      children = element.children('input')
+      if children.length
+        element = children.first()
       if (element.hasClass('shown'))
         element.removeClass('shown')
         element.addClass('hidden')
       else
         element.removeClass('hidden')
         element.addClass('shown')
-
-# reload the page; removes pending purchases
-$('#reset').click ->
-  window.location.href = "/";
-
-# submit purchase
-$('#purchase').click ->
-  $.ajax
-    type: 'post'
-    url: '/orders/purchase',
-    data: JSON.stringify(get_orders())
-    contentType: 'application/json; charset=utf-8'
-    traditional: true
-    success: (data) ->
-      return
 
 # show/hide cart contents
 $('#order-total').click ->
@@ -253,8 +241,21 @@ item_search = () =>
       $(child).removeClass("shown")
       $(child).addClass("hidden")
 
-$(document).on "keydown", "#snack-search", (event) ->
-  console.log(event.which)
-  if event.which == 13
+$(document).on "keydown", "#snack-search", (e) ->
+  if e.which == 13
     item_search()
-    event.preventDefault()
+    e.preventDefault()
+# reload the page; removes pending purchases
+$('#reset').click ->
+  window.location.href = "/";
+
+# submit purchase
+$('#purchase').click ->
+  $.ajax
+    type: 'post'
+    url: '/orders/purchase',
+    data: JSON.stringify(get_orders())
+    contentType: 'application/json; charset=utf-8'
+    traditional: true
+    success: (data) ->
+      return
