@@ -85,7 +85,7 @@ add_item_to_cart = (id, name, price, qtty) =>
 $('body .jumbotron .container .row #items .item .item-text').on 'change', 'input', (event) ->
   qntty = parseInt($(this).val())
   id = $(this).attr("id").slice(9, $(this).attr("id").length)
-  price = $(event.target).data('price')
+  price = parseFloat($(event.target).data('price'))
   name = $(event.target).data('name')
   set_item_quantity_in_cart(id, name, price, qntty)
 
@@ -245,9 +245,17 @@ $(document).on "keydown", "#snack-search", (e) ->
   if e.which == 13
     item_search()
     e.preventDefault()
-# reload the page; removes pending purchases
+# removes pending purchases
 $('#reset').click ->
-  window.location.href = "/";
+  cart_contents = get_orders()
+  for id in cart_contents['cart_items']['id']
+    input_elem = $('#quantity_'+id)
+    input_elem.attr('value', 0)
+    name = input_elem.attr('name')
+    price = parseFloat(input_elem.attr('data-price'))
+    set_item_quantity_in_cart(id, name, price, 0)
+
+#  window.location.href = "/";
 
 # submit purchase
 $('#purchase').click ->

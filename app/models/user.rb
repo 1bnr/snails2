@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   has_many :orders
   has_one :account
 
+  attr_accessor :card_input
+
   def calculate_running_balance
     order_total = sum_user_orders
     deposits = account.calculate_deposits
