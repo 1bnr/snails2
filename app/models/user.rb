@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   include OrderHelper
   include ActionView::Helpers::NumberHelper
-  validates_format_of :email, {:with => /\A([^@\s]+)@.*(umn\.edu)\z/,
+  validates_format_of :email, {:with => /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/,
     message: " is required to be a umn.edu address"}
 
   before_create :build_default_account

@@ -16,11 +16,5 @@
           = f.label :remember_me
       .actions
         = f.submit "Log in"
-    = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-      .field
-        = f.label :card_input
-        %br/
-      .field
-        = f.text_field :card_input
 
     = render "devise/shared/links"
