@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :deposits
   resources :accounts
-  devise_for :users
+  devise_for :users, :controllers => {:registrations => "users/registrations"}
   resources :snacks
   resources :orders
   resources :line_items
@@ -9,6 +9,10 @@ Rails.application.routes.draw do
 
   devise_scope :user do
       get "users/show", to: "users/sessions#show"
+      get "users/new", to: "users/sessions#new"
+      post "users/create", to: "users/sessions#create"
+      get "users/edit", to: "users/registrations#edit"
+      put "users/update", to: "users/registrations#update"
   end
 
   root "orders#new"

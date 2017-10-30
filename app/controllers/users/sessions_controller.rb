@@ -14,19 +14,16 @@ class Users::SessionsController < Devise::SessionsController
 
   # GET /resource/sign_in
   def new
-    print("hello before login")
     super
   end
 
   # POST /resource/sign_in
   def create
-    print("hello from sign in")
-     super
-   end
+    super
+  end
 
   # DELETE /resource/sign_out
   def destroy
-    print("goodbye")
     super
   end
 

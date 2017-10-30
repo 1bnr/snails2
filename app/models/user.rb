@@ -8,11 +8,11 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable,
+         :validatable, :authentication_keys => {email: false}
+
   has_many :orders
   has_one :account
-
-  attr_accessor :card_input
 
   def calculate_running_balance
     order_total = sum_user_orders

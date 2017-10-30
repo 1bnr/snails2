@@ -188,6 +188,7 @@ config.secret_key = '1aacfc984f84b83b3d16a38fa56bdca3d341404797ff3fc91424c5c4a09
   # Defines which key will be used when recovering the password for an account
   # config.reset_password_keys = [:email]
 
+
   # Time interval you can reset your password with a reset password key.
   # Don't put a too small interval or your users won't have the time to
   # change their passwords.
@@ -212,6 +213,7 @@ config.secret_key = '1aacfc984f84b83b3d16a38fa56bdca3d341404797ff3fc91424c5c4a09
   # "users/sessions/new". It's turned off by default because it's slower if you
   # are using only default views.
   # config.scoped_views = false
+  config.scoped_views = true
 
   # Configure the default scope given to Warden. By default it's the first
   # devise role declared in your routes (usually :user).

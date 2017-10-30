@@ -2,6 +2,7 @@
   .container
     %h1 Welcome to Snails!
     %p=@user.email
+    =link_to "edit account", controller: "registrations", action: "edit", id: @user
 
 .container
   .col-md-6
