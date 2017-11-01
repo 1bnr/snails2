@@ -1,14 +1,19 @@
 class User < ActiveRecord::Base
-  include OrderHelper
-  include ActionView::Helpers::NumberHelper
-  validates_format_of :email, {:with => /\A([^@\s]+)@.*(umn\.edu)\z/,
-    message: " is required to be a umn.edu address"}
-
-  before_create :build_default_account
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable, :confirmable,
+         :recoverable, :rememberable, :trackable, :validatable
+  include OrderHelper
+  include ActionView::Helpers::NumberHelper
+  validates_format_of :email, {:with => /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/,
+    message: " is required to be a valid email address"}
+
+  before_create :build_default_account
+
   has_many :orders
   has_one :account
 
@@ -28,6 +33,15 @@ class User < ActiveRecord::Base
     order_total = account.calculate_deposits
     number_to_currency(order_total)
   end
+
+  protected
+  def confirmation_required?
+    true
+  end
+
+  #def send_confirmation_instructions
+  # stops Devise from automatically sending a confirmation email
+  #end
 
   private
 

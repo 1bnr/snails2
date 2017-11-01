@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :deposits
   resources :accounts
-  devise_for :users
+  devise_for :users, controllers: { confirmations: 'confirmations' }
   resources :snacks
   resources :orders
   resources :line_items
