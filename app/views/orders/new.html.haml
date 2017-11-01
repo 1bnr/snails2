@@ -4,27 +4,34 @@
       .col-lg-12
         %h1.page-header
           Snacks
+        %span{:id => "header-search"}
+          %form.search
+            %input.search-query#snack-search
+              - { :type => "text", :placeholder => "Search" }
+            %button.btn.btn-sm{:type => "button", :value => "Search", :title => "Search for a Snack"} Search
       #items
         - @snacks.each do |snack|
-          .col-lg-3.col-md-4.col-xs-6.thumb
-            %input{:type=>"hidden", :value=>'0', :name=>"#{snack.id}", :id=>"quantity_#{snack.id}"}
-            .add-remove-control{:style => "background-image: url( #{snack.image}); background-repeat: no-repeat; background-size: 95% 95%;"}
-              #item-add{ :class => "item-add"}
-                %img.img-responsive{:alt => "", :src => "../images/add-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}", "data-name" => "#{snack.name}"}
-              %span{:id => "quantity-text_#{snack.id}", :class => "quantity-text"}
-                0
-              #item-remove{:class => "item-remove"}
-                %img.img-responsive{:alt => "", :src => "../images/remove-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}"}
-            .item-price
-              #{snack.get_formatted_price}   #{snack.name}
+          .col-lg-4.col-md-4.col-sm-6.thumb{"data-meta" =>"#{snack.metadata}"}
+            %span{:class => "item", :id => "item_#{snack.id}"}
+              %div{:class => 'add-remove-control shown', :id => "touch-ui_#{snack.id}", :style => "background-image: url( #{snack.image}); background-repeat: no-repeat; background-size: 95% 95%;"}
+                #item-add{ :class => "item-add"}
+                  %img.img-responsive{:alt => "", :src => "../images/add-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}", "data-name" => "#{snack.name}"}
+                %span{:id => "quantity-text_#{snack.id}", :class => "quantity-text"} 0
+                #item-remove{:class => "item-remove"}
+                  %img.img-responsive{:alt => "", :src => "../images/remove-item.png", :id => "#{snack.id}", "data-price" => "#{snack.price}"}
+              %div{:class => 'item-text'}
+                %input{:type=>"number", :value=>'0', :name=>"#{snack.id}", :id=>"quantity_#{snack.id}", :class => "item-quantity", :min => 0, :max => 99, :class => "hidden", "data-price" => "#{snack.price}", "data-name" => "#{snack.name}" }
+                %div.item-price
+                #{snack.get_formatted_price}   #{snack.name}
       %br
       %br
 
 %nav.navbar-inverse.navbar-fixed-bottom
-  %span.navbar
+  %span.navbar{"data-ui" => "Touch UI"}
     %input.btn.btn-primary.btn-sm#purchase{:type => "purchase", :value => "Purchase", :title => "purchase selected items"}
     %button.btn.btn-info.btn-sm#reset{:type => "button", :title => "empty shopping cart"} Reset
     %button.btn.btn-sm#order-total{"data-order" => "{\"cart_items\":{ \"id\":[],\"qntty\":[]}}", :title => "view shopping cart contents"} $0.00
+    %button.btn.btn-sm{:type => "button", :title => "Toggle user interface", :id => "ui_toggle"} Toggle UI
     %div{:id => "cart-container", :class => "cart-container", :toggle => "down"}
       %span{:id => "cart", :class => "cart"}
         %div{:id => "cart-title", :class => "cart-title"}
@@ -40,4 +47,5 @@
             %li add
           %ul{:id => "remove", :class => "remove cart-elements"}
             %li remove
-= javascript_include_tag 'orders'
+
+= javascript_include_tag 'snacks'

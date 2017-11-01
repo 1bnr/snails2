@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
+  <meta id="vp" name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+  if (screen.width < 450)
+  {
+    var mvp = document.getElementById('vp');
+    mvp.setAttribute('content','width=450');
+  }
+  </script>
   <title>AcmumnSnails</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
