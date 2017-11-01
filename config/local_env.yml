@@ -1,4 +1,3 @@
- Rename this file to local_env.yml
 # Add account settings and API keys here.
 # This file should be listed in .gitignore to keep your settings secret!
 # Each entry gets set as a local environment variable.

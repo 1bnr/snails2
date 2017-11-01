@@ -16,5 +16,6 @@
 !/log/.keep
 /tmp
 
-# ignor my mail information
+# ignore my mail information
+/config/local_env.yml
 .env
