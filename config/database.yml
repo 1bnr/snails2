@@ -30,7 +30,7 @@ test:
 
 production:
   adapter: postgresql
-  database: database_devel
+  database: snails_production
   pool: 5
   timeout: 5000
   username: pgadmin
@@ -46,4 +46,3 @@ production:
 #production:
   #<<: *default
   #database: db/production.sqlite3
-

@@ -1,5 +1,5 @@
 Rails.application.configure do
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: ENV["HOSTNAME"], port: ENV["DEFAULT_PORT"] }
 
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -26,8 +26,8 @@ Rails.application.configure do
     domain: 'gmail.com',
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: 'acmumnsnackmachine@gmail.com',
-    password: '@brakadabra'
+    user_name: ENV["GMAIL_USERNAME"],
+    password: ENV["GMAIL_PASSWORD"]
   }
 
   # Print deprecation notices to the Rails logger.
