@@ -5,36 +5,43 @@
 #   gem 'sqlite3'
 #
 default: &default
-  hostname: 10.0.1.65
+  host: database
+  port: 5432
   adapter: postgresql
   pool: 5
   timeout: 5000
-  username: pgadmin
-  password: abracadabra
+  username: postgres
+  password: postgres
 
 development:
+  host: database
+  port: 5432
   adapter: postgresql
   database: database_devel
   pool: 5
   timeout: 5000
-  username: pgadmin
-  password: abracadabra
+  username: postgres
+  password: postgres
 
 test:
+  host: database
+  port: 5432
   adapter: postgresql
   database: database_devel
   pool: 5
   timeout: 5000
-  username: pgadmin
-  password: abracadabra
+  username: postgres
+  password: postgres
 
 production:
+  host: database
+  port: 5432
   adapter: postgresql
   database: snails_production
   pool: 5
   timeout: 5000
-  username: pgadmin
-  password: abracadabra
+  username: postgres
+  password: postgres
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

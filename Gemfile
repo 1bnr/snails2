@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.2.1"
+ruby "2.2.8"
 gem 'rails_12factor', group: :production
 gem 'bootstrap-sass'
 gem 'autoprefixer-rails'

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build: .
+    depends_on:
+    - database
+    environment:
+    - GMAIL_PASSWORD
+    expose:
+    - 8000
+    ports:
+    - "8000:8000"
+  database:
+    image: "postgres:alpine"
+    ports:
+    - "5432:5432"
