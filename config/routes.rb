@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   resources :orders
   resources :line_items
 
-
+namespace "snacks" do
+  # Put your resources here, as however you defined them before, e.g.:  
+  resources :deposits, :accounts, :users, :snacks, :orders, :line_itmes, :deposits
+end
+  
   devise_scope :user do
       get "users/show", to: "users/sessions#show"
       get "users/new", to: "users/sessions#new"
